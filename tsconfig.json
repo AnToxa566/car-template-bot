@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "module": "ES6",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "removeComments": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "typeRoots": ["./global.d.ts", "./node_modules/@types"],
+  "include": ["**/*.ts", "global.d.ts"],
+  "exclude": ["node_modules"]
+}
