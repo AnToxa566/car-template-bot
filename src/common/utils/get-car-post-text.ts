@@ -1,33 +1,33 @@
 import { Fuel } from "../enums/fuel.enum.js";
 import { ICar } from "../interfaces/car.interface.js";
 
-export const getCarPostText = (post: ICar) => {
+export const getCarPostText = (car: ICar) => {
   return `
-<b>🚗 ${post.title} | Рік: ${post.issue_year}</b>
+<b>🚗 ${car.title} | Рік: ${car.issue_year}</b>
   
-💰${post.price}$ | ${post.city} | Пробіг: ${post.mileage} тис. км
+💰${car.price}$ | ${car.city} | Пробіг: ${car.mileage} тис. км
     
 ⚙️ Технічна частина авто: 
     
 • ${
-    post.fuel === Fuel.Electric
-      ? `Ємність акумулятора: ${post.battery_capacity} кВт•год`
-      : `Об‘єм двигуна: ${post.engine_capacity} л`
+    car.fuel === Fuel.Electric
+      ? `Ємність акумулятора: ${car.battery_capacity} кВт•год`
+      : `Об‘єм двигуна: ${car.engine_capacity} л`
   } 
-• Тип палива: ${post.fuel}
+• Тип палива: ${car.fuel}
 • ${
-    post.fuel === Fuel.Electric
-      ? `Запас ходу: ${post.power_reserve} кВт•год`
-      : `Коробка передач: ${post.transmission}`
+    car.fuel === Fuel.Electric
+      ? `Запас ходу: ${car.power_reserve} км`
+      : `Коробка передач: ${car.transmission}`
   } 
-• Привід: ${post.occasion}
+• Привід: ${car.occasion}
   
 🍝 Короткий опис:
-  ${post.description}
+${car.description}
     
-VIN: ${post.description}
+VIN: ${car.description}
     
-🗣 Контакти: ${post.phone_number}, ${post.owner_name}
+🗣 Контакти: ${car.phone_number}, ${car.owner_name}
     
 🇺🇦 <a href="https://t.me/chesniybarig">Обирай область</a> | <a href="https://t.me/crysimpletrade">Подати оголошення</a>`;
 };
