@@ -25,7 +25,7 @@ export const getCarPostText = (car: ICar) => {
 🍝 Короткий опис:
 ${car.description}
     
-VIN: ${car.description}
+VIN: ${car.vin_code}
     
 🗣 Контакти: ${car.phone_number}, ${car.owner_name}
     
