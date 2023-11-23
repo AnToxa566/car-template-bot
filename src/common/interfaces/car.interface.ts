@@ -1,12 +1,13 @@
 import { Fuel } from "../enums/fuel.enum.js";
 import { Occasion } from "../enums/occasion.enum.js";
 import { Transmission } from "../enums/transmission.enum.js";
+import { ILocation } from "./location.interface.js";
 
 export interface ICar {
   title: string;
   issue_year: number;
   price: number;
-  city: string;
+  city: ILocation;
   mileage: number;
   vin_code: string;
   fuel: Fuel;
