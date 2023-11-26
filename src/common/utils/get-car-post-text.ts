@@ -25,7 +25,7 @@ export const getCarPostText = (car: ICar) => {
 • ${
     car.fuel === Fuel.Electric
       ? `Ємність акумулятора: ${car.battery_capacity} кВт•год`
-      : `Об‘єм двигуна: ${car.engine_capacity} л`
+      : `Об‘єм двигуна: ${car.engine_capacity?.toFixed(1)} л`
   } 
 • Тип палива: ${car.fuel}
 • ${
