@@ -1,3 +1,4 @@
+import { InputMediaPhoto } from "grammy/types";
 import { InlineKeyboard, InputMediaBuilder, Keyboard } from "grammy";
 
 import { Fuel } from "../enums/fuel.enum.js";
@@ -42,17 +43,23 @@ export const handleCreatePost = async (
 ) => {
   const post = {} as ICar;
 
-  // await ctx.reply("Фото");
-  // const test = await conversation.waitFor("message:photo");
+  const photos: InputMediaPhoto[] = [];
 
-  // const photos = test.message.photo.map((photo) =>
-  //   InputMediaBuilder.photo(photo.file_id)
-  // );
-  // await ctx.replyWithMediaGroup(photos);
-
-  await ctx.reply("Чекаю на назву авто 📝", {
+  await ctx.reply("Фото 🌄", {
     reply_markup: cancelConservetionKeyboard,
   });
+
+  while (true) {
+    const photo = await conversation.waitFor(["message:photo", "message:text"]);
+
+    if (photo.message.photo) {
+      photos.push(InputMediaBuilder.photo(photo.message.photo[0].file_id));
+    } else {
+      break;
+    }
+  }
+
+  await ctx.reply("Чекаю на назву авто 📝");
   post.title = await conversation.form.text();
 
   await ctx.reply("Рік випуску 📅");
@@ -127,9 +134,12 @@ export const handleCreatePost = async (
   await ctx.reply("Імʼя власника 💁‍♂️");
   post.owner_name = await conversation.form.text();
 
-  await ctx.reply(getCarPostText(post), {
-    parse_mode: "HTML",
+  photos[0].caption = getCarPostText(post);
+  photos[0].parse_mode = "HTML";
+
+  await ctx.replyWithMediaGroup(photos);
+
+  await ctx.reply("Чекаю твого наказу, барига 👨‍🏭", {
     reply_markup: createCarPostKeyboard,
-    disable_web_page_preview: true,
   });
 };
