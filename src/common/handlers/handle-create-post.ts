@@ -46,7 +46,7 @@ export const handleCreatePost = async (
   const photos: InputMediaPhoto[] = [];
 
   await ctx.reply("Фото 🌄", {
-    reply_markup: cancelConservetionKeyboard,
+    reply_markup: new Keyboard().text("Завершити додавання фото 🚪"),
   });
 
   while (true) {
@@ -59,7 +59,9 @@ export const handleCreatePost = async (
     }
   }
 
-  await ctx.reply("Чекаю на назву авто 📝");
+  await ctx.reply("Чекаю на назву авто 📝", {
+    reply_markup: cancelConservetionKeyboard,
+  });
   post.title = await conversation.form.text();
 
   await ctx.reply("Рік випуску 📅");
