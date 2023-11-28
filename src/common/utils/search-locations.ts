@@ -1,5 +1,8 @@
 import { locations } from "../../assets/data/locations.js";
+import { LocationType } from "../enums/location-type.enum.js";
 import { ILocation } from "../interfaces/location.interface.js";
+
+import Fuse from "fuse.js";
 
 export interface PopulatedLocation {
   data: ILocation;
@@ -8,16 +11,27 @@ export interface PopulatedLocation {
 }
 
 export const searchLocations = (search: string): PopulatedLocation[] => {
-  const searchedLocations = locations.filter((location) =>
-    location.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const fuse = new Fuse(locations, {
+    keys: ["name"],
+  });
 
-  return searchedLocations.map((location) => {
-    const parent = locations.find((parent) => parent.id === location.parent_id);
-    const fullName = `${location.public_name}, ${parent?.public_name}`;
+  const searchedLocations = fuse
+    .search(search)
+    .filter(
+      ({ item }) =>
+        item.type === LocationType.CITY ||
+        item.type === LocationType.URBAN ||
+        item.type === LocationType.STATE_CENTER
+    );
+
+  return searchedLocations.slice(0, 4).map((location) => {
+    const parent = locations.find(
+      (parent) => parent.id === location.item.parent_id
+    );
+    const fullName = `${location.item.public_name}, ${parent?.public_name}`;
 
     return {
-      data: location,
+      data: location.item,
       parent,
       fullName,
     };

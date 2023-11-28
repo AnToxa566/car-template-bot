@@ -1,4 +1,4 @@
-import { InlineKeyboard, Keyboard } from "grammy";
+import { InlineKeyboard, InputMediaBuilder, Keyboard } from "grammy";
 
 import { Fuel } from "../enums/fuel.enum.js";
 import { Occasion } from "../enums/occasion.enum.js";
@@ -41,6 +41,14 @@ export const handleCreatePost = async (
   ctx: CarPostContext
 ) => {
   const post = {} as ICar;
+
+  // await ctx.reply("Фото");
+  // const test = await conversation.waitFor("message:photo");
+
+  // const photos = test.message.photo.map((photo) =>
+  //   InputMediaBuilder.photo(photo.file_id)
+  // );
+  // await ctx.replyWithMediaGroup(photos);
 
   await ctx.reply("Чекаю на назву авто 📝", {
     reply_markup: cancelConservetionKeyboard,
