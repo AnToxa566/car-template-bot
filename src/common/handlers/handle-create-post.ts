@@ -10,10 +10,10 @@ import {
   CarPostContext,
   CarPostConversation,
 } from "../types/car-post-context.type.js";
-import { BotCommand } from "../enums/bot-command.enum.js";
 import { searchLocations } from "../utils/search-locations.js";
 import { findLocationById } from "../utils/find-location-by-id.js";
 import { ILocation } from "../interfaces/location.interface.js";
+import { channelService } from "../../services/channels/channel.service.js";
 
 export const fuelChoosingInlineKeyboard = InlineKeyboard.from(
   Object.values(Fuel).map((fuel) => [InlineKeyboard.text(fuel)])
@@ -27,14 +27,6 @@ export const transmissionChoosingInlineKeyboard = InlineKeyboard.from(
   Object.values(Transmission).map((transmission) => [
     InlineKeyboard.text(transmission),
   ])
-);
-
-export const createCarPostKeyboard = new Keyboard().text(
-  BotCommand.CreatePostText
-);
-
-export const cancelConservetionKeyboard = new Keyboard().text(
-  BotCommand.CancelConservetionText
 );
 
 export const handleCreatePost = async (
@@ -60,7 +52,7 @@ export const handleCreatePost = async (
   }
 
   await ctx.reply("Чекаю на назву авто 📝", {
-    reply_markup: cancelConservetionKeyboard,
+    reply_markup: { remove_keyboard: true },
   });
   post.title = await conversation.form.text();
 
@@ -140,8 +132,37 @@ export const handleCreatePost = async (
   photos[0].parse_mode = "HTML";
 
   await ctx.replyWithMediaGroup(photos);
+  const channels = await channelService.findAll();
 
-  await ctx.reply("Чекаю твого наказу, барига 👨‍🏭", {
-    reply_markup: createCarPostKeyboard,
-  });
+  if (channels.length) {
+    const chennelsKeyboard = InlineKeyboard.from(
+      channels.map((channeel) => [
+        InlineKeyboard.text(channeel.slug, channeel.name),
+      ])
+    );
+
+    const publishingMessage = await ctx.reply(
+      "Нехай цей пост побачить світ 📢",
+      {
+        reply_markup: chennelsKeyboard,
+      }
+    );
+
+    const channelName = (
+      await conversation.waitForCallbackQuery(channels.map((ch) => ch.name))
+    ).match;
+
+    try {
+      await ctx.api.sendMediaGroup(channelName.toString(), photos);
+      await ctx.reply("Вжух, вже на каналі 🪄");
+    } catch (err) {
+      await ctx.reply("Упс, щось пішло не так 🥲");
+      console.log(err);
+    } finally {
+      await ctx.api.deleteMessage(
+        ctx.message?.chat.id || "undefined",
+        publishingMessage.message_id
+      );
+    }
+  }
 };

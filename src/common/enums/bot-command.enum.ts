@@ -1,6 +1,7 @@
 export enum BotCommand {
   Start = "start",
-  CancelConservetionText = "Вийти 🚪",
-  CreatePost = "create-post",
-  CreatePostText = "Створити пост 🚙",
+  Help = "help",
+  CreatePost = "newpost",
+  AddChannel = "addchannel",
+  ExitConversation = "exit",
 }
