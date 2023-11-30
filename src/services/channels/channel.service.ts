@@ -20,6 +20,17 @@ class ChannelService {
     return this.channels;
   }
 
+  async findAllByChatId(chatId: string): Promise<IChannel[]> {
+    try {
+      const response = await fs.promises.readFile(this.fileName);
+
+      this.channels = JSON.parse(response.toString() || "[]");
+      this.channels = this.channels.filter((ch) => ch.user_id === chatId);
+    } catch {}
+
+    return this.channels;
+  }
+
   create(channel: IChannel): IChannel {
     fs.stat(this.fileName, (err) => {
       if (err === null) {

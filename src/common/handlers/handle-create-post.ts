@@ -37,6 +37,8 @@ export const handleCreatePost = async (
 
   const photos: InputMediaPhoto[] = [];
 
+  const chatId = ctx.message?.chat.id.toString();
+
   await ctx.reply("Фото 🌄", {
     reply_markup: new Keyboard().text("Завершити додавання фото 🚪"),
   });
@@ -132,7 +134,7 @@ export const handleCreatePost = async (
   photos[0].parse_mode = "HTML";
 
   await ctx.replyWithMediaGroup(photos);
-  const channels = await channelService.findAll();
+  const channels = await channelService.findAllByChatId(chatId || "");
 
   if (channels.length) {
     const chennelsKeyboard = InlineKeyboard.from(
@@ -159,10 +161,7 @@ export const handleCreatePost = async (
       await ctx.reply("Упс, щось пішло не так 🥲");
       console.log(err);
     } finally {
-      await ctx.api.deleteMessage(
-        ctx.message?.chat.id || "undefined",
-        publishingMessage.message_id
-      );
+      await ctx.api.deleteMessage(chatId || "", publishingMessage.message_id);
     }
   }
 };
