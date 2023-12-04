@@ -141,7 +141,9 @@ export const handleCreatePost = async (
       channels.map((channeel) => [
         InlineKeyboard.text(channeel.slug, channeel.name),
       ])
-    );
+    )
+      .text("Відміна 🚫", "cancel")
+      .row();
 
     const publishingMessage = await ctx.reply(
       "Нехай цей пост побачить світ 📢",
@@ -151,12 +153,19 @@ export const handleCreatePost = async (
     );
 
     const channelName = (
-      await conversation.waitForCallbackQuery(channels.map((ch) => ch.name))
+      await conversation.waitForCallbackQuery([
+        ...channels.map((ch) => ch.name),
+        "cancel",
+      ])
     ).match;
 
     try {
-      await ctx.api.sendMediaGroup(channelName.toString(), photos);
-      await ctx.reply("Вжух, вже на каналі 🪄");
+      if (channelName !== "cancel") {
+        await ctx.api.sendMediaGroup(channelName.toString(), photos);
+        await ctx.reply("Вжух, вже на каналі 🪄");
+      } else {
+        await ctx.reply("Ну як хочешь 😒");
+      }
     } catch (err) {
       await ctx.reply("Упс, щось пішло не так 🥲");
       console.log(err);

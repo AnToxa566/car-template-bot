@@ -3,5 +3,6 @@ export enum BotCommand {
   Help = "help",
   CreatePost = "newpost",
   AddChannel = "addchannel",
+  Channels = "channels",
   ExitConversation = "exit",
 }

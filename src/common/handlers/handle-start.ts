@@ -11,6 +11,7 @@ export const handleStart = async (ctx: CarPostContext) => {
 
 /newpost - створити новий пост
 /addchannel - додати новий канал
+/channels - переглянути усі канали
 
 /exit - вийти з режиму створення/додавання сутностей
 `);
