@@ -11,21 +11,16 @@ class ChannelService {
 
   private channels: IChannel[] = [];
 
-  async findAll(): Promise<IChannel[]> {
+  async findAll(props?: { chatId?: string }): Promise<IChannel[]> {
     try {
       const response = await fs.promises.readFile(this.fileName);
       this.channels = JSON.parse(response.toString() || "[]");
-    } catch {}
 
-    return this.channels;
-  }
-
-  async findAllByChatId(chatId: string): Promise<IChannel[]> {
-    try {
-      const response = await fs.promises.readFile(this.fileName);
-
-      this.channels = JSON.parse(response.toString() || "[]");
-      this.channels = this.channels.filter((ch) => ch.user_id === chatId);
+      if (props?.chatId) {
+        this.channels = this.channels.filter(
+          (ch) => ch.user_id === props.chatId
+        );
+      }
     } catch {}
 
     return this.channels;
@@ -57,6 +52,23 @@ class ChannelService {
     });
 
     return channel;
+  }
+
+  async update(channel: IChannel) {
+    this.channels = await this.findAll();
+    this.channels = this.channels.filter((ch) => ch.id !== channel.id);
+
+    await fs.promises.writeFile(
+      this.fileName,
+      JSON.stringify([...this.channels, channel])
+    );
+  }
+
+  async delete(id: string) {
+    this.channels = await this.findAll();
+    this.channels = this.channels.filter((ch) => ch.id !== id);
+
+    await fs.promises.writeFile(this.fileName, JSON.stringify(this.channels));
   }
 }
 

@@ -134,7 +134,7 @@ export const handleCreatePost = async (
   photos[0].parse_mode = "HTML";
 
   await ctx.replyWithMediaGroup(photos);
-  const channels = await channelService.findAllByChatId(chatId || "");
+  const channels = await channelService.findAll({ chatId });
 
   if (channels.length) {
     const chennelsKeyboard = InlineKeyboard.from(

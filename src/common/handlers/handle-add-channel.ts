@@ -8,7 +8,7 @@ export const handleAddChannel = async (
   conversation: CarPostConversation,
   ctx: CarPostContext
 ) => {
-  await ctx.reply("Відправ назву свого каналу у форматі @my_channel_name");
+  await ctx.reply("Відправ id свого каналу у форматі -100........");
   const channelName = await conversation.form.text();
 
   await ctx.reply("Дай назву для відображення");

@@ -9,10 +9,7 @@ import { CarPostContext } from "./common/types/car-post-context.type.js";
 import { handleStart } from "./common/handlers/handle-start.js";
 import { handleAddChannel } from "./common/handlers/handle-add-channel.js";
 import { handleCreatePost } from "./common/handlers/handle-create-post.js";
-import { handleCancleConversation } from "./common/handlers/handle-cancle-conversation.js";
-import { handleCreatePostConversation } from "./common/handlers/handle-create-post-conversation.js";
-import { handleAddChannelConversation } from "./common/handlers/handle-add-channel-conversation.js";
-import { channelService } from "./services/channels/channel.service.js";
+import { handleManageChannels } from "./common/handlers/handle-manage-channels.js";
 
 dotenv.config();
 
@@ -26,13 +23,26 @@ bot.use(
 bot.use(conversations());
 bot.use(createConversation(handleCreatePost, ConservetionId.CreatePost));
 bot.use(createConversation(handleAddChannel, ConservetionId.AddChannel));
+bot.use(
+  createConversation(handleManageChannels, ConservetionId.ManageChannels)
+);
 
 bot.command([BotCommand.Start, BotCommand.Help], handleStart);
 
-bot.command(BotCommand.ExitConversation, handleCancleConversation);
+bot.command(BotCommand.ExitConversation, async (ctx: CarPostContext) => {
+  await ctx.conversation.exit();
+});
 
-bot.command(BotCommand.CreatePost, handleCreatePostConversation);
+bot.command(BotCommand.CreatePost, async (ctx: CarPostContext) => {
+  await ctx.conversation.enter(ConservetionId.CreatePost);
+});
 
-bot.command(BotCommand.AddChannel, handleAddChannelConversation);
+bot.command(BotCommand.AddChannel, async (ctx: CarPostContext) => {
+  await ctx.conversation.enter(ConservetionId.AddChannel);
+});
+
+bot.command(BotCommand.Channels, async (ctx: CarPostContext) => {
+  await ctx.conversation.enter(ConservetionId.ManageChannels);
+});
 
 bot.start();
