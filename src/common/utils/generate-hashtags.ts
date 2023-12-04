@@ -37,5 +37,5 @@ export const generateHashtags = (car: ICar) => {
     hashtags.push(`#${car.fuel.toLowerCase()}`);
   }
 
-  return hashtags.join(" ");
+  return hashtags.map((h) => h.replace("-", "")).join(" ");
 };
